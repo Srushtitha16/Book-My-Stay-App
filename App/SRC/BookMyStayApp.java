@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 class RoomInventory {
 
@@ -26,6 +27,8 @@ class RoomInventory {
         }
 
         System.out.println("---------------------------");
+        System.out.println(".");
+
     }
 }
 
