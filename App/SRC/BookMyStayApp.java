@@ -12,7 +12,6 @@ class InsufficientInventoryException extends Exception {
     public InsufficientInventoryException(String message) {
         super(message);
     }
-}
 
 public class BookMyStayApp {
     private static Map<String, Integer> inventory = new HashMap<>();
