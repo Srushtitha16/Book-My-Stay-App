@@ -177,5 +177,5 @@ public class BookMyStayApp {
 
         BookingService bookingService = new BookingService();
         bookingService.processBookings(queue, inventory);
-    }
+    } System.out.println(".");
 }
