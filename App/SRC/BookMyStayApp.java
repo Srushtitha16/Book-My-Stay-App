@@ -28,6 +28,8 @@ class RoomInventory {
         }
 
         System.out.println("---------------------------");
+        System.out.println(".");
+
     }
 }
 
