@@ -1,67 +1,54 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
+import java.util.Queue;
 
-class Reservation {
-    private String guestName;
-    private String roomType;
+class BookingRequest {
+    String guestName;
+    int roomId;
 
-    public Reservation(String guestName, String roomType) {
+    public BookingRequest(String guestName, int roomId) {
         this.guestName = guestName;
-        this.roomType = roomType;
-    }
-
-    public String getGuestName() {
-        return guestName;
-    }
-
-    public String getRoomType() {
-        return roomType;
-    }
-
-    @Override
-    public String toString() {
-        return "Guest: " + guestName + ", Room Type: " + roomType;
+        this.roomId = roomId;
     }
 }
 
-class BookingHistory {
-    private List<Reservation> history = new ArrayList<>();
+class HotelInventory {
+    private boolean[] rooms = new boolean[5]; // 5 rooms, false = available
 
-    public void addRecord(Reservation reservation) {
-        history.add(reservation);
-    }
+    // Critical Section: Synchronized to prevent double allocation
+    public synchronized boolean bookRoom(int roomId, String guest) {
+        if (roomId < 0 || roomId >= rooms.length) return false;
 
-    public List<Reservation> getAllRecords() {
-        return new ArrayList<>(history);
-    }
-}
+        if (!rooms[roomId]) {
+            // Simulate processing time to increase chance of race condition
+            try { Thread.sleep(100); } catch (InterruptedException e) {}
 
-class BookingReportService {
-    public void generateSummaryReport(BookingHistory bookingHistory) {
-        List<Reservation> records = bookingHistory.getAllRecords();
-
-        System.out.println("Booking History Report");
-        if (records.isEmpty()) {
-            System.out.println("No records found.");
+            rooms[roomId] = true; // Mark as booked
+            System.out.println("SUCCESS: Room " + roomId + " booked for " + guest);
+            return true;
         } else {
-            for (Reservation res : records) {
-                System.out.println(res);
-            }
+            System.out.println("FAILURE: Room " + roomId + " is already taken. Guest: " + guest);
+            return false;
         }
     }
 }
 
 public class BookMyStayApp {
     public static void main(String[] args) {
-        System.out.println("Booking History and Reporting\n");
+        HotelInventory inventory = new HotelInventory();
 
-        BookingHistory history = new BookingHistory();
-        BookingReportService reportService = new BookingReportService();
+        // Scenario: Multiple guests trying to book the SAME room (Room 1)
+        Runnable task1 = () -> inventory.bookRoom(1, "Alice");
+        Runnable task2 = () -> inventory.bookRoom(1, "Bob");
+        Runnable task3 = () -> inventory.bookRoom(2, "Charlie");
 
-        history.addRecord(new Reservation("Abhi", "Single"));
-        history.addRecord(new Reservation("Subha", "Double"));
-        history.addRecord(new Reservation("Vanmathi", "Suite"));
+        Thread thread1 = new Thread(task1);
+        Thread thread2 = new Thread(task2);
+        Thread thread3 = new Thread(task3);
 
-        reportService.generateSummaryReport(history);
+        System.out.println("Starting concurrent booking simulation...");
+
+        thread1.start();
+        thread2.start();
+        thread3.start();
     }
 }
