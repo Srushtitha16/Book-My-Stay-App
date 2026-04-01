@@ -30,9 +30,7 @@ class HotelInventory {
             return false;
         }
     }
-}
 
-public class BookMyStayApp {
     public static void main(String[] args) {
         HotelInventory inventory = new HotelInventory();
 
