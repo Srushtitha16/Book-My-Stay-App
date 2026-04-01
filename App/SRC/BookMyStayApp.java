@@ -57,6 +57,8 @@ public class BookMyStayApp {
         Service airportShuttle = new Service("Airport Shuttle", 45.0);
 
         System.out.println("--- Selecting Add-On Services ---");
+        System.out.println("-.");
+
 
         // Guest selects services
         manager.addServiceToReservation(resId, breakfast);
